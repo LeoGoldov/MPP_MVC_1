@@ -1,0 +1,44 @@
+﻿@model MPP_MVC_1.Models.Habit
+
+@{
+    ViewData["Title"] = "Создание привычки";
+}
+
+<h1>Создание привычки</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Title" class="control-label">Название</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="control-label">Описание</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Color" class="control-label">Цвет</label>
+        <input asp-for="Color" class="form-control" type="color" />
+        <span asp-validation-for="Color" class="text-danger"></span>
+        <small class="form-text text-muted">Выберите цвет для привычки</small>
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="control-label">Сложность</label>
+        <select asp-for="Difficulty" class="form-control">
+            <option value="Easy">Лёгкая</option>
+            <option value="Medium">Средняя</option>
+            <option value="Hard">Сложная</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <input type="submit" value="Создать" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>

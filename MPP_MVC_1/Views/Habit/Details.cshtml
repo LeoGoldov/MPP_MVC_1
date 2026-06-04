@@ -1,0 +1,76 @@
+﻿@model MPP_MVC_1.Models.Habit
+
+@{
+    ViewData["Title"] = "Детали привычки";
+}
+
+<h1>Детали привычки</h1>
+
+<div class="card" style="border-left: 5px solid #@Model.Color">
+    <div class="card-body">
+        <h3>@Model.Title</h3>
+        <p class="text-muted">@Model.Description</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Сложность:</strong> @Model.Difficulty</p>
+                <p><strong>Дата создания:</strong> @Model.CreatedAt.ToString("dd.MM.yyyy")</p>
+                <p><strong>Статус:</strong> @(Model.IsArchived ? "В архиве" : "Активна")</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Теги:</strong></p>
+                @if (Model.HabitTags.Any())
+                {
+                        <ul>
+                        @foreach (var habitTag in Model.HabitTags)
+                        {
+                                    <li>@habitTag.Tag.Name</li>
+                        }
+                        </ul>
+                }
+                else
+                {
+                        <p>Нет тегов</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mt-4">Отметка выполнения</h2>
+
+<form asp-action="ToggleLog" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-3">
+            <input type="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success">Отметить</button>
+        </div>
+    </div>
+</form>
+
+<h3 class="mt-4">Последние 7 дней</h3>
+<div class="row">
+    @{
+        var startDate = DateTime.Now.AddDays(-7);
+        var logs = Model.Logs.ToDictionary(l => l.Date.Date, l => l);
+    }
+    @for (int i = 0; i < 7; i++)
+    {
+        var date = startDate.AddDays(i);
+        var log = logs.ContainsKey(date.Date) ? logs[date.Date] : null;
+            <div class="col-md-1 text-center">
+                <div class="border rounded p-2 @(log != null ? "bg-success text-white" : "bg-light")">
+                    <div><small>@date.ToString("dd/MM")</small></div>
+                    <div><strong>@(log != null ? "✓" : "✗")</strong></div>
+                </div>
+            </div>
+    }
+</div>
+
+<p class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редактировать</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+</p>
